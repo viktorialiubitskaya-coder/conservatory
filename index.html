@@ -10,629 +10,738 @@
   <meta property="og:image" content="https://viktorialiubitskaya-coder.github.io/conservatory/photos/wine2.jpg">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Preload critical font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display+SC:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,400;1,600&display=swap" rel="stylesheet">
 
+  <style>
+    /* ── Design Tokens ── */
     :root {
-      --ink: #0C0A09;
-      --deep: #130F0E;
-      --surface: #1E1816;
-      --claret: #7B1D35;
-      --gold: #C0985A;
-      --cream: #EDE5D5;
-      --muted: #7A6E60;
-      --border: #2A2320;
+      --ink:       #0C0A09;
+      --surface:   #1C1917;
+      --raised:    #262220;
+      --burgundy:  #722F37;
+      --gold:      #CA8A04;
+      --gold-lt:   #E5A823;
+      --cream:     #F5EDE0;
+      --muted:     #7A6E5E;
+      --border:    #2C2724;
+      --radius-sm: 2px;
+
+      /* spacing scale (8dp) */
+      --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px;
+      --s5: 40px; --s6: 48px; --s7: 64px; --s8: 96px;
+
+      /* z-index scale */
+      --z-base: 0; --z-card: 10; --z-sticky: 40; --z-nav: 100;
     }
 
-    html { scroll-behavior: smooth; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
     body {
       background: var(--ink);
       color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Karla', sans-serif;
       font-weight: 300;
+      font-size: 16px;
       line-height: 1.7;
       overflow-x: hidden;
     }
 
-    /* NAV */
-    nav {
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    /* ── Focus ── */
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    /* ── NAV ── */
+    .nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
+      z-index: var(--z-nav);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 28px 48px;
-      transition: background .4s, padding .4s, backdrop-filter .4s;
+      padding: var(--s4) var(--s6);
+      transition: background 300ms ease, padding 300ms ease, backdrop-filter 300ms ease;
     }
-    nav.scrolled {
-      background: rgba(12, 10, 9, .92);
-      backdrop-filter: blur(12px);
-      padding: 18px 48px;
+    .nav.scrolled {
+      background: rgba(12,10,9,.93);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: var(--s2) var(--s6);
       border-bottom: 1px solid var(--border);
     }
     .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      letter-spacing: .12em;
+      font-family: 'Playfair Display SC', serif;
+      font-size: 1.05rem;
+      letter-spacing: .14em;
       color: var(--cream);
       text-decoration: none;
-      text-transform: uppercase;
+      cursor: pointer;
     }
     .nav-links {
       display: flex;
-      gap: 36px;
+      gap: var(--s5);
       list-style: none;
     }
     .nav-links a {
+      font-family: 'Karla', sans-serif;
+      font-size: .78rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
       color: var(--muted);
       text-decoration: none;
-      font-size: .8rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      transition: color .25s;
+      transition: color 200ms ease;
+      cursor: pointer;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
     }
     .nav-links a:hover { color: var(--cream); }
-    .nav-book {
-      background: transparent;
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 var(--s3);
       border: 1px solid var(--gold);
       color: var(--gold);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Karla', sans-serif;
       font-size: .75rem;
-      letter-spacing: .12em;
+      font-weight: 500;
+      letter-spacing: .14em;
       text-transform: uppercase;
-      padding: 9px 22px;
-      cursor: pointer;
       text-decoration: none;
-      transition: background .25s, color .25s;
+      transition: background 200ms ease, color 200ms ease;
+      cursor: pointer;
+      touch-action: manipulation;
     }
-    .nav-book:hover { background: var(--gold); color: var(--ink); }
+    .nav-cta:hover { background: var(--gold); color: var(--ink); }
 
-    /* HERO */
+    /* ── HERO ── */
     .hero {
       position: relative;
-      height: 100vh;
-      min-height: 640px;
+      min-height: 100svh;
       display: flex;
       align-items: flex-end;
-      padding: 0 48px 80px;
+      padding: 0 var(--s6) var(--s8);
     }
     .hero-bg {
       position: absolute;
       inset: 0;
-      background: url('photos/wine2.jpg') center center / cover no-repeat;
+      background: url('photos/wine2.jpg') center 40% / cover no-repeat;
     }
     .hero-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
-        to top,
-        rgba(12,10,9,.95) 0%,
-        rgba(12,10,9,.55) 45%,
-        rgba(12,10,9,.25) 100%
+        160deg,
+        rgba(12,10,9,.15) 0%,
+        rgba(12,10,9,.55) 50%,
+        rgba(12,10,9,.95) 100%
       );
     }
     .hero-content {
       position: relative;
-      z-index: 2;
-      max-width: 640px;
+      z-index: var(--z-card);
+      max-width: 620px;
     }
     .hero-eyebrow {
       font-size: .72rem;
-      letter-spacing: .22em;
+      letter-spacing: .26em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 18px;
+      margin-bottom: var(--s3);
     }
     .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3rem, 7vw, 5.5rem);
-      font-weight: 600;
+      font-family: 'Playfair Display SC', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700;
       line-height: 1.05;
       color: var(--cream);
-      margin-bottom: 24px;
-    }
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold);
+      margin-bottom: var(--s3);
+      letter-spacing: .02em;
     }
     .hero-sub {
-      font-size: .95rem;
-      color: rgba(237, 229, 213, .65);
-      max-width: 440px;
-      line-height: 1.65;
-      margin-bottom: 36px;
+      font-size: 1rem;
+      color: rgba(245,237,224,.68);
+      max-width: 420px;
+      line-height: 1.75;
+      margin-bottom: var(--s5);
     }
-    .hero-cta {
-      display: inline-block;
-      background: var(--claret);
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 var(--s5);
+      background: var(--burgundy);
       color: var(--cream);
-      text-decoration: none;
-      font-size: .78rem;
-      letter-spacing: .14em;
+      font-family: 'Karla', sans-serif;
+      font-size: .82rem;
+      font-weight: 500;
+      letter-spacing: .16em;
       text-transform: uppercase;
-      padding: 15px 36px;
-      transition: background .25s;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 200ms ease;
     }
-    .hero-cta:hover { background: #9a2442; }
+    .btn-primary:hover { background: #8a3944; }
 
-    /* TICKER */
+    /* ── TICKER ── */
     .ticker {
       background: var(--surface);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      padding: 14px 0;
+      padding: var(--s2) 0;
       overflow: hidden;
       white-space: nowrap;
     }
-    .ticker-inner {
+    .ticker-track {
       display: inline-flex;
-      animation: ticker 28s linear infinite;
-      gap: 0;
+      animation: ticker 32s linear infinite;
     }
     .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s4);
+      padding: 0 var(--s5);
       font-size: .72rem;
-      letter-spacing: .18em;
+      letter-spacing: .2em;
       text-transform: uppercase;
       color: var(--muted);
-      padding: 0 40px;
     }
-    .ticker-item span {
-      color: var(--gold);
-      margin-right: 40px;
+    .ticker-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
     }
     @keyframes ticker {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
-    /* ABOUT */
+    /* ── SECTION ATOMS ── */
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: var(--s2);
+    }
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      font-weight: 600;
+      line-height: 1.18;
+      color: var(--cream);
+      margin-bottom: var(--s3);
+    }
+    .section-heading em { font-style: italic; color: var(--gold-lt); }
+    .section-body {
+      font-size: .95rem;
+      color: rgba(245,237,224,.62);
+      line-height: 1.8;
+    }
+
+    /* ── ABOUT ── */
     .about {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 520px;
+      grid-template-columns: 5fr 7fr;
+      min-height: 540px;
     }
-    .about-image {
-      position: relative;
+    .about-img {
       overflow: hidden;
     }
-    .about-image img {
+    .about-img img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 6s ease;
+      transition: transform 6000ms ease;
     }
-    .about-image:hover img { transform: scale(1.04); }
+    .about-img:hover img { transform: scale(1.04); }
     .about-text {
-      background: var(--deep);
+      background: var(--surface);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 72px 64px;
-    }
-    .section-label {
-      font-size: .68rem;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-    }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-      font-weight: 600;
-      line-height: 1.2;
-      color: var(--cream);
-      margin-bottom: 24px;
-    }
-    .section-title em { font-style: italic; color: var(--gold); }
-    .section-body {
-      font-size: .92rem;
-      color: rgba(237,229,213,.65);
-      line-height: 1.8;
-      margin-bottom: 32px;
+      padding: var(--s8) var(--s7);
+      gap: var(--s3);
     }
     .about-detail {
       font-size: .78rem;
       letter-spacing: .1em;
       text-transform: uppercase;
       color: var(--muted);
-      border-left: 2px solid var(--claret);
-      padding-left: 16px;
+      padding-left: var(--s2);
+      border-left: 2px solid var(--burgundy);
+      line-height: 1.9;
     }
 
-    /* MENU */
+    /* ── MENU ── */
     .menu {
-      padding: 96px 48px;
+      padding: var(--s8) var(--s6);
       background: var(--ink);
     }
     .menu-header {
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: var(--s7);
     }
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      max-width: 1200px;
+      gap: 3px;
+      max-width: 1160px;
       margin: 0 auto;
     }
     .menu-card {
       position: relative;
-      aspect-ratio: 3/4;
+      aspect-ratio: 2/3;
       overflow: hidden;
-      cursor: default;
     }
     .menu-card img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform .7s ease;
+      transition: transform 600ms ease;
     }
     .menu-card:hover img { transform: scale(1.06); }
-    .menu-card-overlay {
+    .menu-card-info {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(12,10,9,.9) 0%, transparent 55%);
+      background: linear-gradient(to top, rgba(12,10,9,.92) 0%, rgba(12,10,9,.2) 50%, transparent 100%);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 28px 24px;
+      padding: var(--s3) var(--s3);
     }
     .menu-card-tag {
       font-size: .65rem;
-      letter-spacing: .2em;
+      letter-spacing: .22em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 8px;
+      margin-bottom: var(--s1);
     }
     .menu-card-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-family: 'Playfair Display SC', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
       color: var(--cream);
       margin-bottom: 6px;
     }
     .menu-card-desc {
       font-size: .78rem;
-      color: rgba(237,229,213,.6);
+      font-weight: 300;
+      color: rgba(245,237,224,.6);
       line-height: 1.5;
     }
 
-    /* WINE BAR */
+    /* ── WINE ── */
     .wine {
       display: grid;
-      grid-template-columns: 5fr 7fr;
-      min-height: 560px;
-    }
-    .wine-text {
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 72px 64px;
+      grid-template-columns: 7fr 5fr;
+      min-height: 540px;
     }
     .wine-images {
       display: grid;
       grid-template-columns: 1fr 1fr;
     }
-    .wine-images .img-wrap {
+    .wine-images .img-cell {
       overflow: hidden;
     }
     .wine-images img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 6s ease;
+      transition: transform 600ms ease;
     }
-    .wine-images .img-wrap:hover img { transform: scale(1.05); }
+    .wine-images .img-cell:hover img { transform: scale(1.05); }
+    .wine-text {
+      background: var(--raised);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--s8) var(--s7);
+      gap: var(--s3);
+    }
+    .wine-details {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s1);
+    }
+    .wine-details li {
+      font-size: .82rem;
+      color: rgba(245,237,224,.55);
+      padding-left: var(--s2);
+      border-left: 1px solid var(--border);
+      line-height: 1.6;
+    }
 
-    /* GALLERY */
+    /* ── GALLERY ── */
     .gallery {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 2px;
+      gap: 3px;
     }
-    .gallery-item {
-      position: relative;
+    .gallery-cell {
       aspect-ratio: 1;
       overflow: hidden;
     }
-    .gallery-item img {
+    .gallery-cell img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform .6s ease;
+      transition: transform 600ms ease;
     }
-    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-cell:hover img { transform: scale(1.08); }
 
-    /* TERRACE */
-    .terrace {
-      padding: 96px 48px;
-      background: var(--deep);
+    /* ── QUOTE ── */
+    .quote-section {
+      padding: var(--s8) var(--s6);
+      background: var(--surface);
       text-align: center;
     }
-    .terrace-inner {
-      max-width: 640px;
+    .quote-inner {
+      max-width: 680px;
       margin: 0 auto;
     }
-    .terrace-quote {
+    .quote-mark {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-size: 4rem;
+      line-height: .6;
+      color: var(--burgundy);
+      margin-bottom: var(--s3);
+      display: block;
+    }
+    .quote-text {
+      font-family: 'Playfair Display', serif;
       font-style: italic;
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
       font-weight: 400;
       color: var(--cream);
-      line-height: 1.45;
-      margin-bottom: 24px;
+      line-height: 1.5;
+      margin-bottom: var(--s3);
     }
-    .terrace-attr {
+    .quote-source {
       font-size: .72rem;
-      letter-spacing: .18em;
+      letter-spacing: .2em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    /* CONTACT */
+    /* ── CONTACT ── */
     .contact {
+      padding: var(--s8) var(--s6);
       background: var(--ink);
-      padding: 96px 48px;
       border-top: 1px solid var(--border);
+    }
+    .contact-header {
+      text-align: center;
+      margin-bottom: var(--s7);
     }
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 48px;
-      max-width: 1000px;
-      margin: 0 auto;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s6);
+      max-width: 960px;
+      margin: 0 auto var(--s7);
     }
     .contact-block h3 {
       font-size: .68rem;
-      letter-spacing: .22em;
+      letter-spacing: .24em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 16px;
+      margin-bottom: var(--s2);
     }
-    .contact-block p, .contact-block a {
-      font-size: .9rem;
-      color: rgba(237,229,213,.7);
+    .contact-block p,
+    .contact-block a {
+      font-size: .92rem;
+      color: rgba(245,237,224,.65);
       text-decoration: none;
       display: block;
-      line-height: 1.8;
-      transition: color .2s;
+      line-height: 1.9;
+      transition: color 200ms ease;
     }
     .contact-block a:hover { color: var(--cream); }
-    .contact-cta-wrap {
-      text-align: center;
-      margin-top: 64px;
-    }
-    .contact-cta {
-      display: inline-block;
-      border: 1px solid var(--claret);
+    .contact-cta-wrap { text-align: center; }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 var(--s6);
+      border: 1px solid var(--burgundy);
       color: var(--cream);
-      text-decoration: none;
-      font-size: .78rem;
-      letter-spacing: .14em;
+      font-family: 'Karla', sans-serif;
+      font-size: .8rem;
+      font-weight: 500;
+      letter-spacing: .16em;
       text-transform: uppercase;
-      padding: 15px 44px;
-      transition: background .25s;
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 200ms ease;
     }
-    .contact-cta:hover { background: var(--claret); }
+    .btn-secondary:hover { background: var(--burgundy); }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer {
-      background: var(--deep);
+      background: var(--surface);
       border-top: 1px solid var(--border);
-      padding: 32px 48px;
+      padding: var(--s4) var(--s6);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
     .footer-logo {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Playfair Display SC', serif;
       font-size: .9rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
+      letter-spacing: .16em;
       color: var(--muted);
     }
-    .footer-copy {
+    .footer-info {
       font-size: .72rem;
-      letter-spacing: .1em;
-      color: rgba(122,110,96,.5);
+      letter-spacing: .08em;
+      color: rgba(122,110,94,.5);
     }
-    .footer-social {
+    .footer-links {
       display: flex;
-      gap: 20px;
+      gap: var(--s3);
     }
-    .footer-social a {
-      font-size: .7rem;
-      letter-spacing: .15em;
+    .footer-links a {
+      font-size: .72rem;
+      letter-spacing: .14em;
       text-transform: uppercase;
       color: var(--muted);
       text-decoration: none;
-      transition: color .2s;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      transition: color 200ms ease;
+      cursor: pointer;
     }
-    .footer-social a:hover { color: var(--gold); }
+    .footer-links a:hover { color: var(--gold); }
 
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      nav { padding: 20px 24px; }
-      nav.scrolled { padding: 14px 24px; }
-      .nav-links { display: none; }
-      .hero { padding: 0 24px 64px; }
-      .about { grid-template-columns: 1fr; }
-      .about-image { aspect-ratio: 4/3; }
-      .about-text { padding: 48px 24px; }
-      .menu { padding: 64px 24px; }
-      .menu-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
-      .menu-grid .menu-card:last-child { display: none; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
       .wine { grid-template-columns: 1fr; }
-      .wine-text { padding: 48px 24px; }
-      .wine-images { grid-template-columns: 1fr 1fr; aspect-ratio: 16/7; }
+      .wine-images { aspect-ratio: 16/7; }
+      .wine-text { padding: var(--s7) var(--s6); }
+    }
+
+    @media (max-width: 768px) {
+      .nav { padding: var(--s3) var(--s3); }
+      .nav.scrolled { padding: var(--s2) var(--s3); }
+      .nav-links { display: none; }
+
+      .hero { padding: 0 var(--s3) var(--s7); min-height: 100svh; }
+
+      .about { grid-template-columns: 1fr; }
+      .about-img { aspect-ratio: 4/3; }
+      .about-text { padding: var(--s6) var(--s3); }
+
+      .menu { padding: var(--s7) var(--s3); }
+      .menu-grid { grid-template-columns: 1fr 1fr; }
+      .menu-grid .menu-card:last-child { display: none; }
+
+      .wine-text { padding: var(--s6) var(--s3); }
+
       .gallery { grid-template-columns: 1fr 1fr; }
-      .terrace { padding: 64px 24px; }
-      .contact { padding: 64px 24px; }
-      .contact-grid { grid-template-columns: 1fr; gap: 32px; }
-      footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px; }
+
+      .quote-section { padding: var(--s7) var(--s3); }
+
+      .contact { padding: var(--s7) var(--s3); }
+      .contact-grid { grid-template-columns: 1fr; gap: var(--s4); }
+
+      footer {
+        flex-direction: column;
+        gap: var(--s2);
+        text-align: center;
+        padding: var(--s3);
+      }
+    }
+
+    @media (max-width: 375px) {
+      .hero-title { font-size: 2.5rem; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .menu-grid .menu-card:last-child { display: flex; }
+      .gallery { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Skip link for keyboard users -->
+  <a href="#main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" onfocus="this.style.left='0';this.style.width='auto';this.style.height='auto';this.style.padding='8px 16px';this.style.background='#CA8A04';this.style.color='#0C0A09';this.style.zIndex='9999'">Перейти к содержимому</a>
+
   <!-- NAV -->
-  <nav id="main-nav">
-    <a href="#" class="nav-logo">Консерватория</a>
-    <ul class="nav-links">
+  <nav class="nav" id="main-nav" aria-label="Основная навигация">
+    <a href="#" class="nav-logo" aria-label="Консерватория — на главную">Консерватория</a>
+    <ul class="nav-links" role="list">
       <li><a href="#about">О ресторане</a></li>
       <li><a href="#menu">Меню</a></li>
-      <li><a href="#wine">Винная карта</a></li>
+      <li><a href="#wine">Вина</a></li>
       <li><a href="#contact">Контакты</a></li>
     </ul>
-    <a href="tel:+74951387078" class="nav-book">Забронировать</a>
+    <a href="tel:+74951387078" class="nav-cta" aria-label="Позвонить и забронировать стол">Забронировать</a>
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
+  <main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-bg" role="img" aria-label="Бокалы вина в ресторане Консерватория"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-content">
-      <p class="hero-eyebrow">Москва · Неглинная, 4 · С 2020 года</p>
-      <h1 class="hero-title">Консер-<br><em>ватория</em></h1>
-      <p class="hero-sub">Авторская кухня шефа Андрея Никитина. Сезонное меню обновляется каждые две недели — только свежие продукты и честный вкус.</p>
-      <a href="tel:+74951387078" class="hero-cta">Забронировать стол</a>
+      <p class="hero-eyebrow">Москва · Неглинная, 4</p>
+      <h1 class="hero-title" id="hero-title">Консерватория</h1>
+      <p class="hero-sub">Авторская кухня шефа Андрея Никитина. Сезонное меню, которое живёт вместе с природой — обновляется каждые две недели.</p>
+      <a href="tel:+74951387078" class="btn-primary" aria-label="Позвонить и забронировать стол в ресторане Консерватория">Забронировать стол</a>
     </div>
   </section>
 
   <!-- TICKER -->
-  <div class="ticker">
-    <div class="ticker-inner">
-      <span class="ticker-item"><span>✦</span> Авторская кухня</span>
-      <span class="ticker-item"><span>✦</span> Шеф Андрей Никитин</span>
-      <span class="ticker-item"><span>✦</span> Летняя веранда</span>
-      <span class="ticker-item"><span>✦</span> Сезонное меню</span>
-      <span class="ticker-item"><span>✦</span> Винная карта Бордо и Бургундии</span>
-      <span class="ticker-item"><span>✦</span> 4.7 ★ на Яндексе</span>
-      <span class="ticker-item"><span>✦</span> Авторские коктейли</span>
-      <span class="ticker-item"><span>✦</span> Авторская кухня</span>
-      <span class="ticker-item"><span>✦</span> Шеф Андрей Никитин</span>
-      <span class="ticker-item"><span>✦</span> Летняя веранда</span>
-      <span class="ticker-item"><span>✦</span> Сезонное меню</span>
-      <span class="ticker-item"><span>✦</span> Винная карта Бордо и Бургундии</span>
-      <span class="ticker-item"><span>✦</span> 4.7 ★ на Яндексе</span>
-      <span class="ticker-item"><span>✦</span> Авторские коктейли</span>
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item"><span class="ticker-dot"></span>Авторская кухня</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Шеф Андрей Никитин</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Летняя веранда</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Сезонное меню</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Бордо и Бургундия</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>4.7 ★ · 224 отзыва</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Авторские коктейли</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Авторская кухня</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Шеф Андрей Никитин</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Летняя веранда</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Сезонное меню</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Бордо и Бургундия</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>4.7 ★ · 224 отзыва</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Авторские коктейли</span>
     </div>
   </div>
 
   <!-- ABOUT -->
-  <section class="about" id="about">
-    <div class="about-image">
-      <img src="photos/coffee.jpg" alt="Интерьер ресторана Консерватория" loading="lazy">
+  <section class="about" id="about" aria-labelledby="about-heading">
+    <div class="about-img">
+      <img src="photos/coffee.jpg" alt="Уютный интерьер ресторана Консерватория" loading="lazy" width="800" height="800">
     </div>
     <div class="about-text">
       <p class="section-label">О ресторане</p>
-      <h2 class="section-title">Место, где<br><em>вкус — это разговор</em></h2>
-      <p class="section-body">
-        «Консерватория» — не просто ресторан. Это пространство, где каждое блюдо рассказывает историю. Шеф Андрей Никитин обновляет меню каждые две недели, следуя сезону и собственному вдохновению.
-      </p>
-      <p class="section-body">
-        Французская классика в современном прочтении, безупречная винная карта с акцентом на Бордо и Бургундию, летняя веранда с видом на один из самых красивых уголков Москвы.
-      </p>
-      <p class="about-detail">Шеф Андрей Никитин · Сезонное меню · Авторские десерты</p>
+      <h2 class="section-heading" id="about-heading">Место, где вкус —<br><em>это разговор</em></h2>
+      <p class="section-body">«Консерватория» — пространство, где каждое блюдо рассказывает историю. Шеф Андрей Никитин обновляет меню каждые две недели, следуя сезону и собственному вдохновению.</p>
+      <p class="section-body" style="margin-top:var(--s2)">Французская классика в современном прочтении, безупречная винная карта с акцентом на Бордо и Бургундию, летняя веранда с панорамным видом.</p>
+      <p class="about-detail" aria-label="Ключевые особенности ресторана">Шеф Андрей Никитин<br>Сезонное меню · обновление каждые 2 недели<br>Ресторан · Бар · Кондитерская</p>
     </div>
   </section>
 
   <!-- MENU -->
-  <section class="menu" id="menu">
-    <div class="menu-header">
+  <section class="menu" id="menu" aria-labelledby="menu-heading">
+    <header class="menu-header">
       <p class="section-label">Избранное</p>
-      <h2 class="section-title">Из нашего <em>меню</em></h2>
-    </div>
-    <div class="menu-grid">
-      <div class="menu-card">
-        <img src="photos/duck.jpg" alt="Утиная грудка су-вид" loading="lazy">
-        <div class="menu-card-overlay">
+      <h2 class="section-heading" id="menu-heading">Из нашего <em>меню</em></h2>
+    </header>
+    <div class="menu-grid" role="list">
+
+      <article class="menu-card" role="listitem">
+        <img src="photos/duck.jpg" alt="Утиная грудка су-вид со спаржей и апельсиновым соусом" loading="lazy" width="600" height="900">
+        <div class="menu-card-info" aria-hidden="true">
           <p class="menu-card-tag">Горячее</p>
-          <p class="menu-card-name">Утиная грудка су-вид</p>
-          <p class="menu-card-desc">Спаржа, крем из сельдерея, апельсиновый соус, зелёное масло</p>
+          <p class="menu-card-name">Утиная грудка</p>
+          <p class="menu-card-desc">Су-вид · спаржа · крем из сельдерея · апельсин</p>
         </div>
-      </div>
-      <div class="menu-card">
-        <img src="photos/pizza.jpg" alt="Пицца с трюфелем" loading="lazy">
-        <div class="menu-card-overlay">
+      </article>
+
+      <article class="menu-card" role="listitem">
+        <img src="photos/pizza.jpg" alt="Пицца с трюфелем Норча, страчателлой и прошутто котто" loading="lazy" width="600" height="900">
+        <div class="menu-card-info" aria-hidden="true">
           <p class="menu-card-tag">Авторское</p>
           <p class="menu-card-name">Пицца с трюфелем</p>
-          <p class="menu-card-desc">Прошутто котто, страчателла, пармезан, трюфель Норча, рукола</p>
+          <p class="menu-card-desc">Прошутто котто · страчателла · трюфель Норча</p>
         </div>
-      </div>
-      <div class="menu-card">
-        <img src="photos/dessert.jpg" alt="Сметанник" loading="lazy">
-        <div class="menu-card-overlay">
+      </article>
+
+      <article class="menu-card" role="listitem">
+        <img src="photos/dessert.jpg" alt="Сметанник с малиной, мёдом и солёной карамелью" loading="lazy" width="600" height="900">
+        <div class="menu-card-info" aria-hidden="true">
           <p class="menu-card-tag">Десерт</p>
           <p class="menu-card-name">Сметанник</p>
-          <p class="menu-card-desc">Медовый бисквит, малина, солёная карамель, эспума из сметаны, меренга</p>
+          <p class="menu-card-desc">Медовый бисквит · малина · солёная карамель</p>
         </div>
-      </div>
+      </article>
+
     </div>
   </section>
 
   <!-- WINE BAR -->
-  <section class="wine" id="wine">
+  <section class="wine" id="wine" aria-labelledby="wine-heading">
+    <div class="wine-images">
+      <div class="img-cell">
+        <img src="photos/wine.jpg" alt="Бутылки Бордо и Бургундии в погребе ресторана Консерватория" loading="lazy" width="600" height="800">
+      </div>
+      <div class="img-cell">
+        <img src="photos/cocktail.jpg" alt="Авторский коктейль, созданный барменом по настроению гостя" loading="lazy" width="600" height="800">
+      </div>
+    </div>
     <div class="wine-text">
       <p class="section-label">Винная карта</p>
-      <h2 class="section-title">Бордо.<br>Бургундия.<br><em>Открытие.</em></h2>
-      <p class="section-body">
-        Наша винная карта — маршрут по лучшим апелласьонам Франции. Château Cantemerle, Gevrey-Chambertin, Vosne-Romanée — каждая бутылка подобрана с любовью к деталям.
-      </p>
-      <p class="section-body">
-        Не знаете, с чего начать? Расскажите бармену о своём настроении — он подберёт идеальный бокал.
-      </p>
-    </div>
-    <div class="wine-images">
-      <div class="img-wrap">
-        <img src="photos/wine.jpg" alt="Вина Бордо в Консерватории" loading="lazy">
-      </div>
-      <div class="img-wrap">
-        <img src="photos/cocktail.jpg" alt="Авторские коктейли Консерватория" loading="lazy">
-      </div>
+      <h2 class="section-heading" id="wine-heading">Бордо.<br>Бургундия.<br><em>Открытие.</em></h2>
+      <p class="section-body">Каждая бутылка подобрана с любовью к деталям. Если не знаете, с чего начать — расскажите бармену о своём настроении.</p>
+      <ul class="wine-details" aria-label="Примеры вин из карты">
+        <li>Château Cantemerle · Бордо</li>
+        <li>Gevrey-Chambertin La Justice · Домен Антонен Гийон</li>
+        <li>Vosne-Romanée Premier Cru · Домен Мео-Камюзе</li>
+      </ul>
     </div>
   </section>
 
   <!-- GALLERY -->
-  <div class="gallery">
-    <div class="gallery-item">
-      <img src="photos/wine2.jpg" alt="Вино в Консерватории" loading="lazy">
+  <section aria-label="Фотогалерея ресторана Консерватория">
+    <div class="gallery">
+      <div class="gallery-cell">
+        <img src="photos/wine2.jpg" alt="Бокалы вина на столе в ресторане Консерватория" loading="lazy" width="600" height="600">
+      </div>
+      <div class="gallery-cell">
+        <img src="photos/duck.jpg" alt="Утиная грудка — авторское блюдо шефа" loading="lazy" width="600" height="600">
+      </div>
+      <div class="gallery-cell">
+        <img src="photos/dessert.jpg" alt="Сметанник — нежный десерт с малиной" loading="lazy" width="600" height="600">
+      </div>
+      <div class="gallery-cell">
+        <img src="photos/coffee.jpg" alt="Кофе в атмосферном интерьере ресторана" loading="lazy" width="600" height="600">
+      </div>
     </div>
-    <div class="gallery-item">
-      <img src="photos/duck.jpg" alt="Утка sous-vide" loading="lazy">
-    </div>
-    <div class="gallery-item">
-      <img src="photos/dessert.jpg" alt="Сметанник" loading="lazy">
-    </div>
-    <div class="gallery-item">
-      <img src="photos/coffee.jpg" alt="Кофе в ресторане" loading="lazy">
-    </div>
-  </div>
+  </section>
 
-  <!-- TERRACE QUOTE -->
-  <section class="terrace">
-    <div class="terrace-inner">
-      <p class="section-label">Летняя веранда</p>
-      <blockquote class="terrace-quote">
-        «Шикарный вид с террасы. Кухня, сервис, атмосфера — всё на высоте»
+  <!-- QUOTE -->
+  <section class="quote-section" aria-labelledby="quote-heading">
+    <div class="quote-inner">
+      <p class="section-label" id="quote-heading">Летняя веранда</p>
+      <span class="quote-mark" aria-hidden="true">"</span>
+      <blockquote class="quote-text">
+        Шикарный вид с террасы. Кухня, сервис, атмосфера — всё на высоте
       </blockquote>
-      <p class="terrace-attr">— из отзывов гостей · 4.7 ★ · 224 отзыва</p>
+      <p class="quote-source">— из отзывов гостей · 4.7 ★ · 224 отзыва на Яндексе</p>
     </div>
   </section>
 
   <!-- CONTACT -->
-  <section class="contact" id="contact">
-    <div style="text-align:center;margin-bottom:56px;">
+  <section class="contact" id="contact" aria-labelledby="contact-heading">
+    <header class="contact-header">
       <p class="section-label">Как нас найти</p>
-      <h2 class="section-title">Приходите <em>в гости</em></h2>
-    </div>
+      <h2 class="section-heading" id="contact-heading">Приходите <em>в гости</em></h2>
+    </header>
     <div class="contact-grid">
       <div class="contact-block">
         <h3>Адрес</h3>
@@ -643,35 +752,46 @@
       <div class="contact-block">
         <h3>Связь</h3>
         <a href="tel:+74951387078">+7 (495) 138-70-78</a>
-        <a href="https://www.instagram.com/conservatorybar/" target="_blank">Instagram @conservatorybar</a>
-        <a href="https://vk.com/conservatory_bar" target="_blank">ВКонтакте</a>
+        <a href="https://www.instagram.com/conservatorybar/" target="_blank" rel="noopener noreferrer">@conservatorybar</a>
+        <a href="https://vk.com/conservatory_bar" target="_blank" rel="noopener noreferrer">ВКонтакте</a>
       </div>
       <div class="contact-block">
-        <h3>Особенности</h3>
+        <h3>Формат</h3>
         <p>Ресторан · Бар · Кондитерская</p>
         <p>Летняя веранда</p>
         <p>Доставка и самовывоз</p>
       </div>
     </div>
     <div class="contact-cta-wrap">
-      <a href="tel:+74951387078" class="contact-cta">Позвонить и забронировать</a>
+      <a href="tel:+74951387078" class="btn-secondary" aria-label="Позвонить в ресторан Консерватория и забронировать стол">Позвонить и забронировать</a>
     </div>
   </section>
+  </main>
 
   <!-- FOOTER -->
   <footer>
     <span class="footer-logo">Консерватория</span>
-    <span class="footer-copy">Москва, Неглинная, 4</span>
-    <div class="footer-social">
-      <a href="https://www.instagram.com/conservatorybar/" target="_blank">Instagram</a>
-      <a href="https://vk.com/conservatory_bar" target="_blank">VK</a>
-    </div>
+    <span class="footer-info">Москва, Неглинная, 4</span>
+    <nav class="footer-links" aria-label="Ссылки на социальные сети">
+      <a href="https://www.instagram.com/conservatorybar/" target="_blank" rel="noopener noreferrer" aria-label="Instagram ресторана Консерватория">Instagram</a>
+      <a href="https://vk.com/conservatory_bar" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте ресторана Консерватория">VK</a>
+    </nav>
   </footer>
 
   <script>
     const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => {
+    let ticking = false;
+
+    function updateNav() {
       nav.classList.toggle('scrolled', window.scrollY > 60);
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateNav);
+        ticking = true;
+      }
     }, { passive: true });
   </script>
 </body>
